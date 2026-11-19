@@ -1,0 +1,2163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduSkill Hub | Student Profile & Skill Development Management System</title>
+  <style>
+    :root {
+      --primary: #4F46E5;
+      --primary-dark: #3730A3;
+      --primary-light: #EEF2FF;
+      --sidebar: #111827;
+      --sidebar-hover: #1F2937;
+      --sidebar-active: #374151;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+      --success: #16A34A;
+      --success-light: #DCFCE7;
+      --warning: #D97706;
+      --warning-light: #FEF3C7;
+      --danger: #DC2626;
+      --danger-light: #FEE2E2;
+      --info: #0284C7;
+      --info-light: #E0F2FE;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg);
+      color: var(--text-main);
+      display: flex;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* ==========================================================================
+       SIDEBAR
+       ========================================================================== */
+    .sidebar {
+      width: 260px;
+      background-color: var(--sidebar);
+      color: #F9FAFB;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+      transition: all 0.3s ease;
+    }
+
+    .brand {
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .brand-icon {
+      background: linear-gradient(135deg, var(--primary), #818CF8);
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 4px 10px rgba(79, 70, 229, 0.4);
+    }
+
+    .brand-text h1 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #FFFFFF;
+    }
+
+    .brand-text p {
+      font-size: 0.72rem;
+      color: #9CA3AF;
+      font-weight: 500;
+    }
+
+    .nav-menu {
+      flex: 1;
+      padding: 20px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      overflow-y: auto;
+    }
+
+    .nav-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #6B7280;
+      padding: 12px 12px 6px;
+      font-weight: 600;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      color: #D1D5DB;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-item:hover {
+      background-color: var(--sidebar-hover);
+      color: #FFFFFF;
+    }
+
+    .nav-item.active {
+      background-color: var(--primary);
+      color: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.4);
+    }
+
+    .nav-item svg {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+    }
+
+    .sidebar-footer {
+      padding: 16px 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.75rem;
+      color: #9CA3AF;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .sidebar-footer .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      background: rgba(79, 70, 229, 0.25);
+      color: #A5B4FC;
+      font-weight: 600;
+      font-size: 0.7rem;
+      margin-top: 4px;
+    }
+
+    /* ==========================================================================
+       MAIN WORKSPACE
+       ========================================================================== */
+    .main-wrapper {
+      margin-left: 260px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .topbar {
+      background-color: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .page-title h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .page-title p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .content-area {
+      padding: 28px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* ==========================================================================
+       BUTTONS & INPUTS
+       ========================================================================== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+      box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+    }
+
+    .btn-outline {
+      background-color: var(--card-bg);
+      border-color: var(--border);
+      color: var(--text-main);
+    }
+
+    .btn-outline:hover {
+      background-color: #F1F5F9;
+      border-color: #CBD5E1;
+    }
+
+    .btn-danger {
+      background-color: var(--danger);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background-color: #B91C1C;
+    }
+
+    .btn-sm {
+      padding: 6px 10px;
+      font-size: 0.78rem;
+    }
+
+    .btn-icon {
+      padding: 6px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-icon:hover {
+      background-color: #F1F5F9;
+      color: var(--text-main);
+    }
+
+    .btn-icon.delete:hover {
+      background-color: var(--danger-light);
+      color: var(--danger);
+      border-color: #FCA5A5;
+    }
+
+    /* ==========================================================================
+       STATS CARDS
+       ========================================================================== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .stat-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .stat-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .stat-icon.indigo {
+      background-color: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .stat-icon.green {
+      background-color: var(--success-light);
+      color: var(--success);
+    }
+
+    .stat-icon.amber {
+      background-color: var(--warning-light);
+      color: var(--warning);
+    }
+
+    .stat-icon.red {
+      background-color: var(--danger-light);
+      color: var(--danger);
+    }
+
+    .stat-info .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .stat-info .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* ==========================================================================
+       CARD & TABLE STYLING
+       ========================================================================== */
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .card-title h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .card-title p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .table-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      position: relative;
+      min-width: 240px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 8px 12px 8px 36px;
+      font-size: 0.84rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background-color: #F8FAFC;
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--primary);
+      background-color: white;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+    }
+
+    .search-box svg {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: #94A3B8;
+    }
+
+    select.select-filter {
+      padding: 8px 12px;
+      font-size: 0.84rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background-color: #F8FAFC;
+      color: var(--text-main);
+      outline: none;
+      cursor: pointer;
+    }
+
+    select.select-filter:focus {
+      border-color: var(--primary);
+      background-color: white;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    table.data-table th {
+      background-color: #F8FAFC;
+      color: #475569;
+      font-weight: 600;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    table.data-table td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      color: #334155;
+      vertical-align: middle;
+    }
+
+    table.data-table tbody tr {
+      transition: background-color 0.15s ease;
+    }
+
+    table.data-table tbody tr:hover {
+      background-color: #F8FAFC;
+    }
+
+    /* ==========================================================================
+       BADGES & TAGS
+       ========================================================================== */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .badge-excellent {
+      background-color: var(--success-light);
+      color: var(--success);
+      border: 1px solid #86EFAC;
+    }
+
+    .badge-good {
+      background-color: var(--info-light);
+      color: var(--info);
+      border: 1px solid #7DD3FC;
+    }
+
+    .badge-satisfactory {
+      background-color: var(--warning-light);
+      color: var(--warning);
+      border: 1px solid #FDE68A;
+    }
+
+    .badge-needs-improvement {
+      background-color: var(--danger-light);
+      color: var(--danger);
+      border: 1px solid #FCA5A5;
+    }
+
+    .badge-subject {
+      background-color: #F1F5F9;
+      color: #475569;
+      border: 1px solid #CBD5E1;
+      font-weight: 500;
+    }
+
+    .skills-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      max-width: 260px;
+    }
+
+    .skill-tag {
+      background-color: #F1F5F9;
+      color: #334155;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      border: 1px solid #E2E8F0;
+    }
+
+    /* ==========================================================================
+       MODALS
+       ========================================================================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 580px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-lg);
+      animation: modalSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.97);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-header h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      background-color: #F8FAFC;
+      border-bottom-left-radius: var(--radius-lg);
+      border-bottom-right-radius: var(--radius-lg);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .form-group label span.req {
+      color: var(--danger);
+    }
+
+    .form-control {
+      padding: 9px 12px;
+      font-size: 0.88rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      outline: none;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+    }
+
+    .score-preview-box {
+      background-color: #F8FAFC;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 4px;
+    }
+
+    .preview-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .preview-item span.lbl {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .preview-item span.val {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* ==========================================================================
+       TOAST NOTIFICATIONS
+       ========================================================================== */
+    .toast-container {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 2000;
+    }
+
+    .toast {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      min-width: 300px;
+      max-width: 420px;
+      box-shadow: var(--shadow-lg);
+      border-left: 4px solid var(--primary);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translateX(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .toast.success {
+      border-left-color: var(--success);
+    }
+
+    .toast.error {
+      border-left-color: var(--danger);
+    }
+
+    .toast.warning {
+      border-left-color: var(--warning);
+    }
+
+    .toast-icon {
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .toast-content h4 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .toast-content p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================================================
+       SPECIAL VIEWS: MERIT LIST, SAME SKILLS, RAW JDBC
+       ========================================================================== */
+    .view-panel {
+      display: none;
+    }
+
+    .view-panel.active {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .podium-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+
+    .podium-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      text-align: center;
+      position: relative;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .podium-card.rank-1 {
+      border-color: #FCD34D;
+      background: linear-gradient(180deg, #FEF9C3 0%, #FFFFFF 60%);
+      transform: scale(1.03);
+    }
+
+    .podium-card.rank-2 {
+      border-color: #E2E8F0;
+      background: linear-gradient(180deg, #F1F5F9 0%, #FFFFFF 60%);
+    }
+
+    .podium-card.rank-3 {
+      border-color: #FED7AA;
+      background: linear-gradient(180deg, #FFEDD5 0%, #FFFFFF 60%);
+    }
+
+    .rank-medal {
+      font-size: 2rem;
+      margin-bottom: 6px;
+    }
+
+    .podium-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .podium-avg {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 4px 0;
+    }
+
+    .skills-group-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+    }
+
+    .skill-group-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .skill-group-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .skill-group-header .group-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .student-pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: #F8FAFC;
+      border-radius: var(--radius-sm);
+      margin-bottom: 6px;
+      font-size: 0.82rem;
+    }
+
+    .raw-jdbc-box {
+      background: #0F172A;
+      color: #E2E8F0;
+      border-radius: var(--radius-md);
+      padding: 20px;
+      font-family: monospace;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+
+    .raw-jdbc-box .hl {
+      color: #38BDF8;
+      font-weight: bold;
+    }
+
+    .raw-jdbc-box .str {
+      color: #4ADE80;
+    }
+
+    .raw-jdbc-box .cmt {
+      color: #94A3B8;
+      font-style: italic;
+    }
+
+    /* Empty state */
+    .empty-state {
+      padding: 48px 24px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .empty-state svg {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 12px;
+      color: #CBD5E1;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .main-wrapper {
+        margin-left: 0;
+      }
+      .podium-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       SIDEBAR
+       ======================================================================== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <h1>EduSkill Hub</h1>
+        <p>Student Profile &amp; Skills</p>
+      </div>
+    </div>
+
+    <nav class="nav-menu">
+      <span class="nav-label">Core Dashboard</span>
+      <a class="nav-item active" onclick="switchView('view-all-students', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        <span>All Students (CRUD)</span>
+      </a>
+
+      <a class="nav-item" onclick="switchView('view-merit-list', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </svg>
+        <span>Merit List (Desc Sort)</span>
+      </a>
+
+      <span class="nav-label">Examination Analytics</span>
+      <a class="nav-item" onclick="switchView('view-same-skills', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="16 18 22 12 16 6"></polyline>
+          <polyline points="8 6 2 12 8 18"></polyline>
+        </svg>
+        <span>Same Skills Grouping</span>
+      </a>
+
+      <a class="nav-item" onclick="switchView('view-needs-improvement', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <span>Needs Prog Imprv (Q2.7)</span>
+      </a>
+
+      <span class="nav-label">Syllabus Demo</span>
+      <a class="nav-item" onclick="switchView('view-raw-jdbc', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+          <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+          <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+        </svg>
+        <span>Raw JDBC Explorer</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div><strong>CS336B Java Exam Project</strong></div>
+      <div>ODD SEM 2026-27 | MSE-II</div>
+      <span class="badge">Spring Boot + MySQL</span>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       MAIN CONTENT
+       ======================================================================== -->
+  <main class="main-wrapper">
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="page-title">
+        <h2 id="current-view-title">Student Profile Management</h2>
+        <p id="current-view-subtitle">Manage personal information, academic scores, and technical skills</p>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="btn btn-outline" onclick="loadAllStudents()" title="Refresh database records">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+          <span>Refresh</span>
+        </button>
+
+        <button class="btn btn-primary" onclick="openAddStudentModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>Add Student</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Content Workspace -->
+    <div class="content-area">
+
+      <!-- Stats Summary Grid -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon indigo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value" id="stat-total-students">0</div>
+            <div class="stat-label">Total Registered Students</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value" id="stat-class-average">0.0</div>
+            <div class="stat-label">Class Average Score</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon amber">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="7"></circle>
+              <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value" id="stat-top-performer">-</div>
+            <div class="stat-label">Top Performer (Rank #1)</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon red">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value" id="stat-needs-imprv-count">0</div>
+            <div class="stat-label">Needs Prog. Improvement</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           VIEW 1: ALL STUDENTS (CRUD Management Table)
+           ================================================================== -->
+      <section class="view-panel active" id="view-all-students">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <h3>Students Directory</h3>
+              <p>Persistent MySQL database records loaded via Spring JdbcTemplate</p>
+            </div>
+
+            <div class="table-toolbar">
+              <div class="search-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="table-search" placeholder="Search by name, email, or skill..." oninput="filterTable()">
+              </div>
+
+              <select class="select-filter" id="filter-course" onchange="filterTable()">
+                <option value="">All Courses</option>
+              </select>
+
+              <select class="select-filter" id="filter-category" onchange="filterTable()">
+                <option value="">All Categories</option>
+                <option value="Excellent">Excellent (&ge; 85)</option>
+                <option value="Good">Good (70 - 84.99)</option>
+                <option value="Satisfactory">Satisfactory (50 - 69.99)</option>
+                <option value="Needs Improvement">Needs Improvement (&lt; 50)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table" id="students-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Student Info</th>
+                  <th>Course</th>
+                  <th>Prog.</th>
+                  <th>Math</th>
+                  <th>Average</th>
+                  <th>Category</th>
+                  <th>Stronger</th>
+                  <th>Technical Skills</th>
+                  <th style="text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="students-table-body">
+                <tr>
+                  <td colspan="10">
+                    <div class="empty-state">
+                      <p>Loading records from MySQL database...</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           VIEW 2: MERIT LIST (Desc Order by Average Score)
+           ================================================================== -->
+      <section class="view-panel" id="view-merit-list">
+        <!-- Top 3 Podium Cards -->
+        <div class="podium-grid" id="merit-podium">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <h3>Academic Merit List</h3>
+              <p>Generated by <code>GET /api/students/merit-list</code> using <code>Comparator&lt;Student&gt;</code></p>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Student Name</th>
+                  <th>Course</th>
+                  <th>Programming</th>
+                  <th>Mathematics</th>
+                  <th>Average Score</th>
+                  <th>Performance Category</th>
+                </tr>
+              </thead>
+              <tbody id="merit-table-body">
+                <!-- Populated by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           VIEW 3: SAME TECHNICAL SKILLS FINDER (Q2.6)
+           ================================================================== -->
+      <section class="view-panel" id="view-same-skills">
+        <div class="card" style="padding: 20px; background: #EEF2FF; border-color: #C7D2FE; margin-bottom: 4px;">
+          <h4 style="color: #3730A3; font-size: 0.95rem; margin-bottom: 4px;">Question 2.6 Requirement Implementation</h4>
+          <p style="font-size: 0.82rem; color: #4338CA;">
+            Groups students who share the exact same technical skills set using <code>HashSet&lt;String&gt;</code> set equality comparison (order-independent &amp; case-insensitive).
+          </p>
+        </div>
+
+        <div class="skills-group-grid" id="same-skills-container">
+          <!-- Populated by JavaScript -->
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           VIEW 4: NEEDS IMPROVEMENT IN PROGRAMMING (Q2.7)
+           ================================================================== -->
+      <section class="view-panel" id="view-needs-improvement">
+        <div class="card" style="padding: 20px; background: #FEF2F2; border-color: #FECACA; margin-bottom: 4px;">
+          <h4 style="color: #991B1B; font-size: 0.95rem; margin-bottom: 4px;">Question 2.7 Requirement Implementation</h4>
+          <p style="font-size: 0.82rem; color: #B91C1C;">
+            Filtering students who need improvement in programming (<code>programmingScore &lt; 50</code>) but have strong mathematics proficiency (<code>mathematicsScore &ge; 75</code>).
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <h3>Students Needing Programming Focus</h3>
+              <p>Endpoints: <code>GET /api/students/needs-improvement</code></p>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Student Name</th>
+                  <th>Email</th>
+                  <th>Course</th>
+                  <th>Programming Score</th>
+                  <th>Mathematics Score</th>
+                  <th>Average Score</th>
+                  <th>Category</th>
+                </tr>
+              </thead>
+              <tbody id="needs-imprv-table-body">
+                <!-- Populated by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================
+           VIEW 5: RAW JDBC EXPLORER (Mandatory Syllabus Demo)
+           ================================================================== -->
+      <section class="view-panel" id="view-raw-jdbc">
+        <div class="card" style="padding: 20px; background: #F0FDF4; border-color: #BBF7D0; margin-bottom: 4px;">
+          <h4 style="color: #166534; font-size: 0.95rem; margin-bottom: 4px;">Mandatory Lab Syllabus Requirement: Raw JDBC Demonstration</h4>
+          <p style="font-size: 0.82rem; color: #15803D;">
+            Demonstrates traditional JDBC using <code>Class.forName("com.mysql.cj.jdbc.Driver")</code>, <code>DriverManager.getConnection()</code>, <code>PreparedStatement</code>, and <code>ResultSet</code> directly alongside Spring's <code>JdbcTemplate</code>.
+          </p>
+        </div>
+
+        <div class="card" style="padding: 24px;">
+          <div style="display: flex; gap: 12px; align-items: flex-end; max-width: 500px; margin-bottom: 24px;">
+            <div class="form-group" style="flex: 1;">
+              <label for="raw-jdbc-id-input">Enter Student ID to fetch via Raw JDBC:</label>
+              <input type="number" id="raw-jdbc-id-input" class="form-control" placeholder="e.g. 1">
+            </div>
+            <button class="btn btn-primary" onclick="testRawJdbc()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              <span>Execute Raw JDBC</span>
+            </button>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+              <h4 style="font-size: 0.9rem; font-weight: 700; margin-bottom: 8px;">Execution Result from MySQL</h4>
+              <div id="raw-jdbc-result" style="background: #F8FAFC; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; min-height: 180px;">
+                <p style="color: var(--text-muted); font-size: 0.82rem;">Enter an ID and click 'Execute Raw JDBC' to view the database record retrieved using DriverManager.</p>
+              </div>
+            </div>
+
+            <div>
+              <h4 style="font-size: 0.9rem; font-weight: 700; margin-bottom: 8px;">Source Code Architecture (StudentDao.java)</h4>
+              <div class="raw-jdbc-box">
+                <span class="cmt">// 1. Explicit Driver Loading</span><br>
+                Class.forName(<span class="str">"com.mysql.cj.jdbc.Driver"</span>);<br><br>
+                <span class="cmt">// 2. Connection via DriverManager</span><br>
+                <span class="hl">try</span> (Connection conn = DriverManager.getConnection(url, user, pass);<br>
+                     PreparedStatement ps = conn.prepareStatement(<span class="str">"SELECT * FROM students WHERE student_id = ?"</span>)) {<br><br>
+                <span class="cmt">// 3. Parameter Binding</span><br>
+                ps.setInt(1, studentId);<br><br>
+                <span class="cmt">// 4. ResultSet Processing</span><br>
+                <span class="hl">try</span> (ResultSet rs = ps.executeQuery()) {<br>
+                &nbsp;&nbsp;<span class="hl">if</span> (rs.next()) {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;student.setName(rs.getString(<span class="str">"student_name"</span>));<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;...<br>
+                &nbsp;&nbsp;}<br>
+                }<br>
+                } <span class="cmt">// Auto-closed via try-with-resources</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       MODAL: ADD / EDIT STUDENT
+       ======================================================================== -->
+  <div class="modal-overlay" id="student-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-title">Add New Student</h3>
+        <button class="btn-icon" onclick="closeStudentModal()" title="Close">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <form id="student-form" onsubmit="handleFormSubmit(event)">
+        <div class="modal-body">
+          <input type="hidden" id="form-edit-id">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="form-student-id">Student ID <small style="color: var(--text-muted); font-weight: normal;">(Optional / Roll No.)</small></label>
+              <input type="number" id="form-student-id" class="form-control" placeholder="Auto-generated if empty">
+            </div>
+
+            <div class="form-group">
+              <label for="form-course">Course Name <span class="req">*</span></label>
+              <input type="text" id="form-course" class="form-control" placeholder="e.g. CSE, CSE-AI, IT" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="form-name">Student Full Name <span class="req">*</span></label>
+            <input type="text" id="form-name" class="form-control" placeholder="e.g. Harsh Sharma" required>
+          </div>
+
+          <div class="form-group">
+            <label for="form-email">Email Address <span class="req">*</span></label>
+            <input type="email" id="form-email" class="form-control" placeholder="e.g. harsh@kiet.edu" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="form-prog-score">Programming Score (0 - 100) <span class="req">*</span></label>
+              <input type="number" step="0.1" min="0" max="100" id="form-prog-score" class="form-control" placeholder="0 - 100" required oninput="updateModalPreview()">
+            </div>
+
+            <div class="form-group">
+              <label for="form-math-score">Mathematics Score (0 - 100) <span class="req">*</span></label>
+              <input type="number" step="0.1" min="0" max="100" id="form-math-score" class="form-control" placeholder="0 - 100" required oninput="updateModalPreview()">
+            </div>
+          </div>
+
+          <!-- Live Score Preview Box -->
+          <div class="score-preview-box">
+            <div class="preview-item">
+              <span class="lbl">Average Score</span>
+              <span class="val" id="preview-avg">0.0</span>
+            </div>
+            <div class="preview-item">
+              <span class="lbl">Performance Category</span>
+              <span class="val" id="preview-cat">-</span>
+            </div>
+            <div class="preview-item">
+              <span class="lbl">Stronger Subject</span>
+              <span class="val" id="preview-stronger">-</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="form-skills">Technical Skills <small style="color: var(--text-muted); font-weight: normal;">(Comma-separated)</small></label>
+            <input type="text" id="form-skills" class="form-control" placeholder="e.g. Java, Python, Spring Boot, MySQL">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeStudentModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-student">
+            <span>Save Student</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL: DELETE CONFIRMATION
+       ======================================================================== -->
+  <div class="modal-overlay" id="delete-modal">
+    <div class="modal-card" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 style="color: var(--danger);">Confirm Record Deletion</h3>
+        <button class="btn-icon" onclick="closeDeleteModal()">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p>Are you sure you want to permanently delete this student record from the MySQL database?</p>
+        <div style="background: #F8FAFC; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); margin-top: 10px;">
+          <div><strong>Student ID:</strong> <span id="del-student-id">-</span></div>
+          <div><strong>Student Name:</strong> <span id="del-student-name">-</span></div>
+        </div>
+        <p style="font-size: 0.78rem; color: var(--danger); margin-top: 10px;">
+          Note: This action will cascade delete all associated skills from the <code>student_skills</code> table.
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeDeleteModal()">Cancel</button>
+        <button type="button" class="btn btn-danger" id="btn-confirm-delete" onclick="executeDelete()">
+          <span>Delete Permanently</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- ========================================================================
+       VANILLA JAVASCRIPT LOGIC
+       ======================================================================== -->
+  <script>
+    const API_BASE_URL = '/api/students';
+
+    // Application State
+    let studentsData = [];
+    let deleteTargetId = null;
+
+    // Initialize application on DOM load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadAllStudents();
+    });
+
+    // ========================================================================
+    // API COMMUNICATION (Fetch API)
+    // ========================================================================
+    async function loadAllStudents() {
+      try {
+        const response = await fetch(API_BASE_URL);
+        if (!response.ok) throw new Error(`HTTP ${response.status}: Failed to fetch students.`);
+        const result = await response.json();
+        
+        if (result.success && Array.isArray(result.data)) {
+          studentsData = result.data;
+          renderStudentsTable(studentsData);
+          updateDashboardStats(studentsData);
+          populateCourseFilter(studentsData);
+        } else {
+          showToast('Error', result.message || 'Failed to parse student data.', 'error');
+        }
+      } catch (err) {
+        console.error('Fetch error:', err);
+        showToast('Connection Error', 'Backend service unreachable. Ensure Spring Boot is running on port 8080.', 'error');
+        renderErrorState(err.message);
+      }
+    }
+
+    async function loadMeritList() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/merit-list`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const result = await response.json();
+        if (result.success) {
+          renderMeritView(result.data);
+        }
+      } catch (err) {
+        showToast('Error', 'Failed to load merit list.', 'error');
+      }
+    }
+
+    async function loadSameSkills() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/same-skills`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const result = await response.json();
+        if (result.success) {
+          renderSameSkillsView(result.data);
+        }
+      } catch (err) {
+        showToast('Error', 'Failed to load same-skills data.', 'error');
+      }
+    }
+
+    async function loadNeedsImprovement() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/needs-improvement`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const result = await response.json();
+        if (result.success) {
+          renderNeedsImprovementView(result.data);
+        }
+      } catch (err) {
+        showToast('Error', 'Failed to load needs-improvement data.', 'error');
+      }
+    }
+
+    // ========================================================================
+    // RENDER FUNCTIONS (Safe DOM manipulation via textContent / createElement)
+    // ========================================================================
+    function renderStudentsTable(students) {
+      const tbody = document.getElementById('students-table-body');
+      tbody.innerHTML = '';
+
+      if (!students || students.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="10">
+              <div class="empty-state">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                </svg>
+                <p>No student records found in MySQL database.</p>
+                <p style="font-size: 0.78rem; margin-top: 4px;">Click "+ Add Student" above to insert a new record.</p>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      students.forEach(student => {
+        const tr = document.createElement('tr');
+
+        // ID
+        const tdId = document.createElement('td');
+        tdId.style.fontWeight = '700';
+        tdId.textContent = `#${student.studentId}`;
+        tr.appendChild(tdId);
+
+        // Name & Email
+        const tdInfo = document.createElement('td');
+        const nameDiv = document.createElement('div');
+        nameDiv.style.fontWeight = '600';
+        nameDiv.textContent = student.studentName;
+        const emailDiv = document.createElement('div');
+        emailDiv.style.fontSize = '0.74rem';
+        emailDiv.style.color = 'var(--text-muted)';
+        emailDiv.textContent = student.email;
+        tdInfo.appendChild(nameDiv);
+        tdInfo.appendChild(emailDiv);
+        tr.appendChild(tdInfo);
+
+        // Course
+        const tdCourse = document.createElement('td');
+        tdCourse.textContent = student.courseName;
+        tr.appendChild(tdCourse);
+
+        // Programming Score
+        const tdProg = document.createElement('td');
+        tdProg.textContent = Number(student.programmingScore).toFixed(1);
+        tr.appendChild(tdProg);
+
+        // Mathematics Score
+        const tdMath = document.createElement('td');
+        tdMath.textContent = Number(student.mathematicsScore).toFixed(1);
+        tr.appendChild(tdMath);
+
+        // Average Score
+        const tdAvg = document.createElement('td');
+        tdAvg.style.fontWeight = '700';
+        tdAvg.textContent = Number(student.averageScore).toFixed(2);
+        tr.appendChild(tdAvg);
+
+        // Performance Category
+        const tdCat = document.createElement('td');
+        const catBadge = document.createElement('span');
+        const catClass = getCategoryBadgeClass(student.performanceCategory);
+        catBadge.className = `badge ${catClass}`;
+        catBadge.textContent = student.performanceCategory;
+        tdCat.appendChild(catBadge);
+        tr.appendChild(tdCat);
+
+        // Stronger Subject
+        const tdStronger = document.createElement('td');
+        const strongBadge = document.createElement('span');
+        strongBadge.className = 'badge badge-subject';
+        strongBadge.textContent = student.strongerSubject;
+        tdStronger.appendChild(strongBadge);
+        tr.appendChild(tdStronger);
+
+        // Technical Skills
+        const tdSkills = document.createElement('td');
+        const skillsDiv = document.createElement('div');
+        skillsDiv.className = 'skills-container';
+        if (student.technicalSkills && student.technicalSkills.length > 0) {
+          student.technicalSkills.forEach(skill => {
+            const tag = document.createElement('span');
+            tag.className = 'skill-tag';
+            tag.textContent = skill;
+            skillsDiv.appendChild(tag);
+          });
+        } else {
+          skillsDiv.textContent = '-';
+        }
+        tdSkills.appendChild(skillsDiv);
+        tr.appendChild(tdSkills);
+
+        // Actions
+        const tdActions = document.createElement('td');
+        tdActions.style.textAlign = 'right';
+        tdActions.style.whiteSpace = 'nowrap';
+
+        // Edit button
+        const btnEdit = document.createElement('button');
+        btnEdit.className = 'btn-icon';
+        btnEdit.title = 'Edit Student';
+        btnEdit.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>`;
+        btnEdit.onclick = () => openEditStudentModal(student);
+        tdActions.appendChild(btnEdit);
+
+        // Space
+        tdActions.appendChild(document.createTextNode(' '));
+
+        // Delete button
+        const btnDel = document.createElement('button');
+        btnDel.className = 'btn-icon delete';
+        btnDel.title = 'Delete Student';
+        btnDel.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
+        btnDel.onclick = () => openDeleteModal(student.studentId, student.studentName);
+        tdActions.appendChild(btnDel);
+
+        tr.appendChild(tdActions);
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderMeritView(students) {
+      const podium = document.getElementById('merit-podium');
+      const tbody = document.getElementById('merit-table-body');
+      podium.innerHTML = '';
+      tbody.innerHTML = '';
+
+      if (!students || students.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:24px;">No records available.</td></tr>';
+        return;
+      }
+
+      // Podium Top 3
+      const medals = ['🥇', '🥈', '🥉'];
+      const topCount = Math.min(3, students.length);
+      for (let i = 0; i < topCount; i++) {
+        const s = students[i];
+        const card = document.createElement('div');
+        card.className = `podium-card rank-${i+1}`;
+        card.innerHTML = `
+          <div class="rank-medal">${medals[i]}</div>
+          <div style="font-size:0.75rem; text-transform:uppercase; font-weight:700; color:var(--text-muted);">Rank #${i+1}</div>
+          <div class="podium-name">${escapeHtml(s.studentName)}</div>
+          <div class="podium-avg">${Number(s.averageScore).toFixed(2)}%</div>
+          <div style="font-size:0.75rem; color:var(--text-muted);">${escapeHtml(s.courseName)}</div>
+        `;
+        podium.appendChild(card);
+      }
+
+      // Full Table
+      students.forEach((student, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="font-weight:700;">#${index + 1}</td>
+          <td style="font-weight:600;">${escapeHtml(student.studentName)}</td>
+          <td>${escapeHtml(student.courseName)}</td>
+          <td>${Number(student.programmingScore).toFixed(1)}</td>
+          <td>${Number(student.mathematicsScore).toFixed(1)}</td>
+          <td style="font-weight:700; color:var(--primary);">${Number(student.averageScore).toFixed(2)}</td>
+          <td><span class="badge ${getCategoryBadgeClass(student.performanceCategory)}">${escapeHtml(student.performanceCategory)}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderSameSkillsView(dataMap) {
+      const container = document.getElementById('same-skills-container');
+      container.innerHTML = '';
+
+      const keys = Object.keys(dataMap);
+      if (keys.length === 0) {
+        container.innerHTML = `
+          <div class="card" style="grid-column: 1 / -1; padding: 40px; text-align: center; color: var(--text-muted);">
+            <p>No groups of 2 or more students currently share identical sets of technical skills.</p>
+            <p style="font-size: 0.8rem; margin-top: 6px;">Add two students with the same skills (e.g. "Java, SQL") to test Question 2.6.</p>
+          </div>
+        `;
+        return;
+      }
+
+      keys.forEach(skillKey => {
+        const list = dataMap[skillKey];
+        const card = document.createElement('div');
+        card.className = 'skill-group-card';
+
+        let studentsHtml = '';
+        list.forEach(student => {
+          studentsHtml += `
+            <div class="student-pill">
+              <div>
+                <strong>${escapeHtml(student.studentName)}</strong>
+                <span style="color:var(--text-muted); font-size:0.75rem;">(${escapeHtml(student.courseName)})</span>
+              </div>
+              <span style="font-weight:600; color:var(--primary); font-size:0.78rem;">Avg: ${Number(student.averageScore).toFixed(1)}</span>
+            </div>
+          `;
+        });
+
+        card.innerHTML = `
+          <div class="skill-group-header">
+            <div>
+              <span class="group-title">Shared Technical Skill Set</span>
+              <div style="font-size:0.78rem; font-weight:600; color:var(--text-main); margin-top:2px;">${escapeHtml(skillKey)}</div>
+            </div>
+            <span class="badge badge-good">${list.length} Students</span>
+          </div>
+          <div>${studentsHtml}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderNeedsImprovementView(students) {
+      const tbody = document.getElementById('needs-imprv-table-body');
+      tbody.innerHTML = '';
+
+      if (!students || students.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" style="text-align:center; padding:32px; color:var(--text-muted);">
+              No students found with Programming &lt; 50 and Mathematics &ge; 75.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      students.forEach(s => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="font-weight:700;">#${s.studentId}</td>
+          <td style="font-weight:600;">${escapeHtml(s.studentName)}</td>
+          <td>${escapeHtml(s.email)}</td>
+          <td>${escapeHtml(s.courseName)}</td>
+          <td style="font-weight:700; color:var(--danger);">${Number(s.programmingScore).toFixed(1)} &lt; 50</td>
+          <td style="font-weight:700; color:var(--success);">${Number(s.mathematicsScore).toFixed(1)} &ge; 75</td>
+          <td style="font-weight:700;">${Number(s.averageScore).toFixed(2)}</td>
+          <td><span class="badge ${getCategoryBadgeClass(s.performanceCategory)}">${escapeHtml(s.performanceCategory)}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // ========================================================================
+    // RAW JDBC DEMO TESTER
+    // ========================================================================
+    async function testRawJdbc() {
+      const idInput = document.getElementById('raw-jdbc-id-input').value.trim();
+      const resultBox = document.getElementById('raw-jdbc-result');
+      
+      if (!idInput) {
+        showToast('Input Required', 'Please enter a Student ID to test Raw JDBC.', 'warning');
+        return;
+      }
+
+      resultBox.innerHTML = '<p style="color:var(--text-muted);">Executing DriverManager.getConnection() and PreparedStatement...</p>';
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/raw-jdbc/${encodeURIComponent(idInput)}`);
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          const s = result.data;
+          resultBox.innerHTML = `
+            <div style="color:var(--success); font-weight:700; margin-bottom:8px;">
+              ✓ Raw JDBC Query Executed Successfully!
+            </div>
+            <div style="font-size:0.84rem; line-height:1.6;">
+              <div><strong>Student ID:</strong> #${s.studentId}</div>
+              <div><strong>Full Name:</strong> ${escapeHtml(s.studentName)}</div>
+              <div><strong>Email:</strong> ${escapeHtml(s.email)}</div>
+              <div><strong>Course:</strong> ${escapeHtml(s.courseName)}</div>
+              <div><strong>Prog Score:</strong> ${s.programmingScore} | <strong>Math Score:</strong> ${s.mathematicsScore}</div>
+              <div><strong>Average:</strong> ${s.averageScore} (${s.performanceCategory})</div>
+              <div><strong>Technical Skills:</strong> ${s.technicalSkills && s.technicalSkills.length ? escapeHtml(s.technicalSkills.join(', ')) : 'None'}</div>
+            </div>
+          `;
+          showToast('Raw JDBC Success', `Record #${s.studentId} retrieved via DriverManager!`, 'success');
+        } else {
+          resultBox.innerHTML = `<div style="color:var(--danger); font-weight:600;">✗ ${escapeHtml(result.message || 'Student not found in MySQL.')}</div>`;
+          showToast('Not Found', result.message || 'Record not found.', 'error');
+        }
+      } catch (err) {
+        resultBox.innerHTML = `<div style="color:var(--danger); font-weight:600;">✗ Request error: ${escapeHtml(err.message)}</div>`;
+        showToast('Error', 'Failed to execute Raw JDBC query.', 'error');
+      }
+    }
+
+    // ========================================================================
+    // FORM HANDLING (ADD & EDIT)
+    // ========================================================================
+    function openAddStudentModal() {
+      document.getElementById('modal-title').textContent = 'Add New Student';
+      document.getElementById('student-form').reset();
+      document.getElementById('form-edit-id').value = '';
+      document.getElementById('form-student-id').disabled = false;
+      updateModalPreview();
+      document.getElementById('student-modal').classList.add('active');
+    }
+
+    function openEditStudentModal(student) {
+      document.getElementById('modal-title').textContent = `Edit Student #${student.studentId}`;
+      document.getElementById('form-edit-id').value = student.studentId;
+      document.getElementById('form-student-id').value = student.studentId;
+      document.getElementById('form-student-id').disabled = true; // Primary Key cannot be mutated during update
+      document.getElementById('form-name').value = student.studentName;
+      document.getElementById('form-email').value = student.email;
+      document.getElementById('form-course').value = student.courseName;
+      document.getElementById('form-prog-score').value = student.programmingScore;
+      document.getElementById('form-math-score').value = student.mathematicsScore;
+      document.getElementById('form-skills').value = (student.technicalSkills || []).join(', ');
+      updateModalPreview();
+      document.getElementById('student-modal').classList.add('active');
+    }
+
+    function closeStudentModal() {
+      document.getElementById('student-modal').classList.remove('active');
+    }
+
+    function updateModalPreview() {
+      const prog = parseFloat(document.getElementById('form-prog-score').value) || 0;
+      const math = parseFloat(document.getElementById('form-math-score').value) || 0;
+      const avg = (prog + math) / 2.0;
+
+      document.getElementById('preview-avg').textContent = avg.toFixed(2);
+
+      let cat = 'Needs Improvement';
+      if (avg >= 85) cat = 'Excellent';
+      else if (avg >= 70) cat = 'Good';
+      else if (avg >= 50) cat = 'Satisfactory';
+      document.getElementById('preview-cat').textContent = cat;
+
+      let stronger = 'Equal';
+      if (prog > math) stronger = 'Programming';
+      else if (math > prog) stronger = 'Mathematics';
+      document.getElementById('preview-stronger').textContent = stronger;
+    }
+
+    async function handleFormSubmit(event) {
+      event.preventDefault();
+
+      const editId = document.getElementById('form-edit-id').value;
+      const customId = document.getElementById('form-student-id').value;
+      const name = document.getElementById('form-name').value.trim();
+      const email = document.getElementById('form-email').value.trim();
+      const course = document.getElementById('form-course').value.trim();
+      const prog = parseFloat(document.getElementById('form-prog-score').value);
+      const math = parseFloat(document.getElementById('form-math-score').value);
+      const skillsRaw = document.getElementById('form-skills').value;
+
+      // Parse technical skills into an Array
+      const skills = skillsRaw
+        ? skillsRaw.split(',').map(s => s.trim()).filter(s => s.length > 0)
+        : [];
+
+      // Client-side validations
+      if (isNaN(prog) || prog < 0 || prog > 100) {
+        showToast('Validation Error', 'Programming score must be between 0 and 100.', 'warning');
+        return;
+      }
+      if (isNaN(math) || math < 0 || math > 100) {
+        showToast('Validation Error', 'Mathematics score must be between 0 and 100.', 'warning');
+        return;
+      }
+
+      const payload = {
+        studentName: name,
+        email: email,
+        courseName: course,
+        programmingScore: prog,
+        mathematicsScore: math,
+        technicalSkills: skills
+      };
+
+      if (!editId && customId) {
+        payload.studentId = parseInt(customId, 10);
+      }
+
+      const isEdit = Boolean(editId);
+      const url = isEdit ? `${API_BASE_URL}/${editId}` : API_BASE_URL;
+      const method = isEdit ? 'PUT' : 'POST';
+
+      const saveBtn = document.getElementById('btn-save-student');
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<span>Saving...</span>';
+
+      try {
+        const response = await fetch(url, {
+          method: method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          showToast('Success', result.message || (isEdit ? 'Student updated successfully.' : 'Student created successfully.'), 'success');
+          closeStudentModal();
+          loadAllStudents(); // Refresh data
+        } else {
+          showToast('Operation Failed', result.message || 'Failed to save student.', 'error');
+        }
+      } catch (err) {
+        showToast('Network Error', err.message, 'error');
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = '<span>Save Student</span>';
+      }
+    }
+
+    // ========================================================================
+    // DELETE OPERATIONS
+    // ========================================================================
+    function openDeleteModal(id, name) {
+      deleteTargetId = id;
+      document.getElementById('del-student-id').textContent = `#${id}`;
+      document.getElementById('del-student-name').textContent = name;
+      document.getElementById('delete-modal').classList.add('active');
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('delete-modal').classList.remove('active');
+      deleteTargetId = null;
+    }
+
+    async function executeDelete() {
+      if (!deleteTargetId) return;
+
+      const confirmBtn = document.getElementById('btn-confirm-delete');
+      confirmBtn.disabled = true;
+      confirmBtn.innerHTML = '<span>Deleting...</span>';
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/${deleteTargetId}`, {
+          method: 'DELETE'
+        });
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          showToast('Deleted', result.message || 'Student record deleted successfully.', 'success');
+          closeDeleteModal();
+          loadAllStudents();
+        } else {
+          showToast('Delete Failed', result.message || 'Could not delete student.', 'error');
+        }
+      } catch (err) {
+        showToast('Error', err.message, 'error');
+      } finally {
+        confirmBtn.disabled = false;
+        confirmBtn.innerHTML = '<span>Delete Permanently</span>';
+      }
+    }
+
+    // ========================================================================
+    // FILTERING & SEARCH
+    // ========================================================================
+    function filterTable() {
+      const query = document.getElementById('table-search').value.toLowerCase().trim();
+      const courseFilter = document.getElementById('filter-course').value;
+      const catFilter = document.getElementById('filter-category').value;
+
+      const filtered = studentsData.filter(student => {
+        // Course Filter
+        if (courseFilter && student.courseName !== courseFilter) return false;
+        // Category Filter
+        if (catFilter && student.performanceCategory !== catFilter) return false;
+        // Search Query
+        if (query) {
+          const matchName = student.studentName && student.studentName.toLowerCase().includes(query);
+          const matchEmail = student.email && student.email.toLowerCase().includes(query);
+          const matchCourse = student.courseName && student.courseName.toLowerCase().includes(query);
+          const matchId = student.studentId && student.studentId.toString().includes(query);
+          const matchSkills = student.technicalSkills && student.technicalSkills.some(s => s.toLowerCase().includes(query));
+          if (!matchName && !matchEmail && !matchCourse && !matchId && !matchSkills) return false;
+        }
+        return true;
+      });
+
+      renderStudentsTable(filtered);
+    }
+
+    function populateCourseFilter(students) {
+      const select = document.getElementById('filter-course');
+      const current = select.value;
+      const courses = new Set();
+      students.forEach(s => { if (s.courseName) courses.add(s.courseName); });
+
+      select.innerHTML = '<option value="">All Courses</option>';
+      courses.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        if (c === current) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+
+    function updateDashboardStats(students) {
+      const total = students.length;
+      document.getElementById('stat-total-students').textContent = total;
+
+      if (total === 0) {
+        document.getElementById('stat-class-average').textContent = '0.0';
+        document.getElementById('stat-top-performer').textContent = '-';
+        document.getElementById('stat-needs-imprv-count').textContent = '0';
+        return;
+      }
+
+      // Class average
+      const totalAvg = students.reduce((acc, s) => acc + (s.averageScore || 0), 0);
+      const classAvg = (totalAvg / total).toFixed(1);
+      document.getElementById('stat-class-average').textContent = `${classAvg}%`;
+
+      // Top Performer
+      const sorted = [...students].sort((a, b) => b.averageScore - a.averageScore);
+      const top = sorted[0];
+      document.getElementById('stat-top-performer').textContent = `${top.studentName} (${top.averageScore}%)`;
+
+      // Needs Improvement Count (Programming < 50 && Math >= 75)
+      const needsCount = students.filter(s => s.programmingScore < 50 && s.mathematicsScore >= 75).length;
+      document.getElementById('stat-needs-imprv-count').textContent = needsCount;
+    }
+
+    // ========================================================================
+    // VIEW SWITCHING
+    // ========================================================================
+    function switchView(viewId, navEl) {
+      document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+      const targetView = document.getElementById(viewId);
+      if (targetView) targetView.classList.add('active');
+      if (navEl) navEl.classList.add('active');
+
+      const titleEl = document.getElementById('current-view-title');
+      const subEl = document.getElementById('current-view-subtitle');
+
+      switch (viewId) {
+        case 'view-all-students':
+          titleEl.textContent = 'Student Profile Management';
+          subEl.textContent = 'Manage personal information, academic scores, and technical skills';
+          loadAllStudents();
+          break;
+        case 'view-merit-list':
+          titleEl.textContent = 'Academic Merit List';
+          subEl.textContent = 'Ranked leaderboard sorted strictly in descending order of average score';
+          loadMeritList();
+          break;
+        case 'view-same-skills':
+          titleEl.textContent = 'Same Technical Skills Identifier';
+          subEl.textContent = 'Group students sharing identical skill sets using HashSet equality';
+          loadSameSkills();
+          break;
+        case 'view-needs-improvement':
+          titleEl.textContent = 'Targeted Academic Intervention (Q2.7)';
+          subEl.textContent = 'Students needing improvement in Programming (< 50) with strong Mathematics (>= 75)';
+          loadNeedsImprovement();
+          break;
+        case 'view-raw-jdbc':
+          titleEl.textContent = 'Raw JDBC Live Demonstration';
+          subEl.textContent = 'Testing DriverManager, PreparedStatement, and ResultSet against MySQL';
+          break;
+      }
+    }
+
+    // ========================================================================
+    // UTILITIES
+    // ========================================================================
+    function getCategoryBadgeClass(category) {
+      switch (category) {
+        case 'Excellent': return 'badge-excellent';
+        case 'Good': return 'badge-good';
+        case 'Satisfactory': return 'badge-satisfactory';
+        default: return 'badge-needs-improvement';
+      }
+    }
+
+    function showToast(title, message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+
+      let iconSvg = '';
+      if (type === 'success') {
+        iconSvg = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--success)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
+      } else if (type === 'error') {
+        iconSvg = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--danger)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>`;
+      } else {
+        iconSvg = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--warning)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`;
+      }
+
+      toast.innerHTML = `
+        <div class="toast-icon">${iconSvg}</div>
+        <div class="toast-content">
+          <h4>${escapeHtml(title)}</h4>
+          <p>${escapeHtml(message)}</p>
+        </div>
+      `;
+
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(40px)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function renderErrorState(msg) {
+      const tbody = document.getElementById('students-table-body');
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="10">
+            <div class="empty-state" style="color:var(--danger);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <p><strong>Database / Server Connection Error</strong></p>
+              <p style="font-size:0.8rem; margin-top:4px;">${escapeHtml(msg)}</p>
+              <p style="font-size:0.75rem; color:var(--text-muted); margin-top:6px;">
+                Check that MySQL service is running and Spring Boot application has started on port 8080.
+              </p>
+            </div>
+          </td>
+        </tr>
+      `;
+    }
+  </script>
+</body>
+</html>

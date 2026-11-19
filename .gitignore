@@ -1,0 +1,32 @@
+# Maven build output
+target/
+*.class
+
+# Eclipse project files
+.classpath
+.project
+.settings/
+.factorypath
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python scripts (submission helpers, not part of Spring Boot project)
+generate_submission_docs.py
+__pycache__/
+*.pyc
+
+# VS Code
+.vscode/
+
+# Local env overrides (keep application.properties for exam review)
+# application-local.properties
